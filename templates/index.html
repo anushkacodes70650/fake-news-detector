@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nominators | Real-estate management</title>
+  <style>
+    :root{--ink:#172033;--muted:#697386;--brand:#5c4dff;--soft:#f4f6fb;--card:#fff}
+    *{box-sizing:border-box}body{margin:0;background:var(--soft);color:var(--ink);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+    nav{display:flex;justify-content:space-between;align-items:center;padding:22px 7%;background:#111a35;color:#fff}
+    .logo{font-size:25px;font-weight:800;letter-spacing:-1px}.logo span{color:#8f84ff}
+    .hero{padding:75px 7% 45px;background:linear-gradient(120deg,#111a35,#332d78);color:#fff}
+    .hero h1{max-width:720px;font-size:clamp(36px,6vw,70px);line-height:1.03;margin:0 0 18px}.hero p{max-width:630px;color:#d6d8ec;font-size:18px}
+    .wrap{max-width:1120px;margin:auto;padding:35px 7%}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+    .card,.panel{background:var(--card);border:1px solid #e4e7ef;border-radius:18px;padding:22px;box-shadow:0 10px 30px #26345b0d}
+    .card h3{margin:0 0 7px}.muted{color:var(--muted)}.rent{color:var(--brand);font-size:22px;font-weight:800}
+    button,.button{border:0;border-radius:10px;padding:11px 15px;background:var(--brand);color:#fff;font-weight:700;cursor:pointer;text-decoration:none}
+    .auth{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:-20px;position:relative}.auth input,.auth select,.auth button{width:100%;margin-top:9px}
+    input,select,textarea{border:1px solid #d9deea;border-radius:9px;padding:11px;background:#fff;font:inherit}textarea{min-height:90px}
+    label{display:block;color:var(--muted);font-size:13px;margin-top:11px}.flash{max-width:1120px;margin:14px auto 0;padding:12px 7%;color:#fff;background:#e85757}.flash.success{background:#25a46a}
+    @media(max-width:680px){.auth{grid-template-columns:1fr}.hero{padding-top:45px}nav{padding:18px 7%}}
+  </style>
+</head>
+<body>
+<nav><div class="logo">nomi<span>nators</span></div><a class="button" href="#access">Sign in</a></nav>
+{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="flash {{category}}">{{message}}</div>{% endfor %}{% endwith %}
+<section class="hero"><h1>Property decisions, made simple.</h1><p>Nominators connects property managers, tenants, and administrators in one secure workspace.</p></section>
+<main class="wrap">
+  <h2>Featured properties</h2>
+  <div class="grid">{% for p in properties %}
+    <article class="card"><h3>{{p.title}}</h3><div class="muted">{{p.address}}</div><p>{{p.description or "A quality property managed through Nominators."}}</p><div class="rent">${{"%.2f"|format(p.rent)}} / month</div><small class="muted">Managed by {{p.manager_name}}</small></article>
+  {% else %}<div class="panel"><h3>Your next property belongs here.</h3><p class="muted">Sign in as a manager to submit a property for approval.</p></div>{% endfor %}</div>
+  <div id="access" class="auth">
+    <form class="panel" method="post" action="{{url_for('login')}}"><h2>Welcome back</h2><label>Username<input name="username" required autocomplete="username"></label><label>Password<input type="password" name="password" required autocomplete="current-password"></label><button>Sign in</button><p class="muted">Demo admin: <b>admin</b> / <b>admin123</b></p></form>
+    <form class="panel" method="post" action="{{url_for('register')}}"><h2>Create account</h2><label>Full name<input name="name" required></label><label>Username<input name="username" required></label><label>Password<input type="password" name="password" minlength="6" required></label><label>Account type<select name="role"><option value="TENANT">Tenant</option><option value="MANAGER">Property manager</option></select></label><button>Create account</button></form>
+  </div>
+</main>
+</body></html>
